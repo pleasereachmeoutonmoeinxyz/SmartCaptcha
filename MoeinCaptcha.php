@@ -9,7 +9,7 @@
  * This class is designed to make random captcha code by your oponion
  * it extended from CaptchaImage class.
  * @author Seyed Mohammad Moein Hoseini Manesh
- * @link captcha.printf.ir 
+ 
  * @author mail moein7tl@gmail.com
  *  With special thanks to Ali Akbari Boromand and Hossein Bokhamsein
  */
