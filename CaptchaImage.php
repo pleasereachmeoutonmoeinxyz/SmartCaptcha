@@ -1,7 +1,7 @@
 <?php
 
 /* 
- * MoeinCaptchaLib
+ * SmartCaptcha
  */
 
 /**
@@ -11,7 +11,6 @@
  * by copy / past your ttf files into Fonts directory
  *
  * @author Seyed Mohammad Moein Hoseini Manesh
- * @link captcha.printf.ir 
  * @author mail moein7tl@gmail.com
  *
  */

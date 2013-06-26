@@ -1,11 +1,11 @@
 <?php
 
 /*
- * MoeinCaptchaLib v1.0
+ * SmartCaptchaLib v1.0
  */
 
 /*
- * Description of MoeinCaptcha
+ * Description of SmartCaptcha
  * This class is designed to make random captcha code by your oponion
  * it extended from CaptchaImage class.
  * @author Seyed Mohammad Moein Hoseini Manesh
@@ -16,7 +16,7 @@
 
 require_once 'CaptchaImage.php';
 
-class MoeinCaptcha extends CaptchaImage {
+class SmartCaptcha extends CaptchaImage {
 
     private $probbility_num,$probbility_symbols,$probbility_space;
     private $len;
