@@ -1,16 +1,14 @@
 <?php
-
-/*
+/**
  * SmartCaptchaLib v1.0
- */
-
-/*
+ *
  * Description of SmartCaptcha
  * This class is designed to make random captcha code by your oponion
  * it extended from CaptchaImage class.
+ *
  * @author Seyed Mohammad Moein Hoseini Manesh
- 
  * @author mail moein7tl@gmail.com
+ *
  *  With special thanks to Ali Akbari Boromand and Hossein Bokhamsein
  */
 
@@ -18,8 +16,35 @@ require_once 'CaptchaImage.php';
 
 class SmartCaptcha extends CaptchaImage {
 
-    private $probbility_num,$probbility_symbols,$probbility_space;
+    /**
+     * Probability number
+     */
+    private $probbility_num;
+
+    /**
+     * Probability symbols
+     */
+    private $probbility_symbols;
+
+    /**
+     * Probability space
+     */
+    private $probbility_space;
+
+    /**
+     * CAPTCHA length
+     */
     private $len;
+
+    /**
+     * Constructor
+     *
+     * @param Integer $width
+     * @param Integer $height
+     * @param Integer $len
+     *
+     * @return void
+     */
     public function  __construct($width = 215,$height = 100,$len = 6) {
         parent::__construct($width, $height);
         $this->setLen($len);           // set length of the captcha code
@@ -27,10 +52,17 @@ class SmartCaptcha extends CaptchaImage {
         $this->newText();              // make random captcha code
     }
     
+    /**
+     * Random text
+     *
+     * Return a random captcha code by probability of 
+     * numbers, symbols and spaces
+     *
+     * @param Integer $length
+     * 
+     * @return String $string
+     */
     private function RandomText($length = 6){
-        /*
-         * This function is returning random captcha code by probbility of numbers,symbols and space
-         */
         $string = "";
         $rand = 0;
         for ($i = 0; $i < $length; $i++){
@@ -46,12 +78,21 @@ class SmartCaptcha extends CaptchaImage {
         }
         return $string;
     }
+
+    /**
+     * Set probability
+     *
+     * This method is use to set probbility of numbers ,symbol and space in captcha code
+     * by default,they are 0
+     * if use this ,it will make new captcha code too
+     *
+     * @param Integer $number
+     * @param Integer $symbole
+     * @param Integer $space
+     *
+     * @return void
+     */
     public function SetProbbility($number = 0,$symbol = 0,$space = 0){
-        /*
-         * This method is use to set probbility of numbers ,symbol and space in captcha code
-         * by default,they are 0
-         * if use this ,it will make new captcha code too
-         */
         settype($number, "int");
         settype($symbol, "int");
         settype($space, "int");
@@ -70,51 +111,90 @@ class SmartCaptcha extends CaptchaImage {
        $this->newText();
     }
 
-    private function RandomNumber(){
-        //This method,will return number of char
+    /**
+     * Random number
+     *
+     * This method,will return number of char
+     *
+     * @return Integer (0-9)
+     */
+    public function RandomNumber(){
         return (chr(rand(48, 57)));
     }
+
+    /**
+     * Next text
+     *
+     * Generate random captcha
+     * @return void
+     */
     public function newText(){
-        //generate random captcha
        $this->Text = $this->RandomText($this->len);
     }
+
+    /**
+     * Set Length of CAPTCHA
+     *
+     * @param Integer $len
+     *
+     * @return void
+     */
     public function setLen($len){
-        //set length of captcha code
         if ($len >= 20 || $len <= 2)
             $this->len = 6;
         else
             $this->len = $len;
-        $this->newText();
-    }
-    private function RandomAlphaBet(){
-        //This method will return a-z /A-Z
-        if (rand(0, 1) == 0) // Captal
-            return (chr(rand(65,90)));
-        else
-            return (chr(rand(97,122)));
+            $this->newText();
     }
 
+    /**
+     * Random alphabet
+     *
+     * @return String [A-Za-z]
+     */
+    private function RandomAlphaBet(){
+        if (rand(0, 1) == 0) return (chr(rand(65,90))); // upercase
+        else return (chr(rand(97,122))); // lowercase
+    }
+
+    /**
+     * Random symbols
+     *
+     * This method will return some of symboles
+     *
+     * @return String
+     */
     private function RandomSymbols(){
-        //This method,will return some of symboles
         $randnum = rand(0,22);
-        if ($randnum <= 5)
-            $randnum += 33;
-        else if ($randnum >= 6 && $randnum <= 9)
-            $randnum += 36;
-        else if ($randnum >= 10 && $randnum <= 16)
-            $randnum += 48;
-        else if ($randnum >= 17 && $randnum <= 19)
-            $randnum += 74;
-        else
-            $randnum += 103;
+        if ($randnum <= 5) $randnum += 33;
+        else if ($randnum >= 6 && $randnum <= 9) $randnum += 36;
+        else if ($randnum >= 10 && $randnum <= 16) $randnum += 48;
+        else if ($randnum >= 17 && $randnum <= 19) $randnum += 74;
+        else $randnum += 103;
         
         return (chr($randnum));
     }
 
+    /**
+     * Get text
+     *
+     * Return captcha code for save in session
+     * or insert into database or keep in value
+     * it's better to use it directly befor or after draw method
+     * @return String $text
+     */
     public function getText(){
-        // return captcha code for save in session or insert into database or keep in value
-        // it's better to use it directly befor or after draw method
         return $this->Text;
+    }
+
+    /**
+     * Set text
+     *
+     * @param String $text
+     * @return void
+     */
+    public function setText($string){
+        $this->Text = $string;
     }
 }
 ?>
