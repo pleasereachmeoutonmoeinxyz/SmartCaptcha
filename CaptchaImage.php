@@ -1,10 +1,7 @@
 <?php
-
-/* 
- * SmartCaptcha
- */
-
 /**
+ * SmartCaptcha
+ *
  * Description of CaptchaImage
  * This class is desinged to make image for Captcha code.
  * This class is reading folder Fonts,you can add any font to this class easily
@@ -16,46 +13,128 @@
  */
 
 class CaptchaImage {
-    private $fonts = array(); // to keep fonts name
+
+    /**
+     * Keep fonts for use in CAPTCHA image
+     */
+    private $fonts = array();
+
+    /**
+     * Fonts Directory
+     */
     private $fonts_dir = 'Fonts';
-    private $width, $height;  // width and height of Image,if you don't use background you can set it directly
-    private $Color_R = null,$Color_G = null,$Color_B = null; // Background RGB
-    private $TC_R = null,$TC_G = null,$TC_B = null;// Text RGB
-    private $HSL_H,$HSL_S,$HSL_L;
+
+    /**
+     * Width and height of Image
+     * If you don't use background you can set it directly
+     */
+    private $width, $height;
+
+    /**
+     * Background RGB
+     */
+    private $Color_R = null, $Color_G = null, $Color_B = null;
+
+    /**
+     * Text RGB
+     */
+    private $TC_R = null, $TC_G = null, $TC_B = null;
+
+    /**
+     * Text HSL
+     */
+    private $HSL_H, $HSL_S, $HSL_L;
+
+    /**
+     * HSL complement
+     */
     private $HSL_H_complement;
-    private $Difficultly = 5,$angle = 16;
+
+    /**
+     * CAPTCHA difficulity
+     */
+    private $Difficultly = 5;
+
+    /**
+     * CAPTCHA printed character angle
+     */
+    private $angle = 16;
+
+    /**
+     * Background Image
+     */
     private $BackgroundImage = null;
+
+    /**
+     * Image Suffix
+     */
     private $ImageSuffix = null;
+
+    /**
+     * Count of fonts which can be used
+     */
     private $font_can_be_use_count;
+
+    /**
+     * Font can be added by user
+     */
     private $font_can_be_user_src = array();
+
+    /**
+     * CAPTCHA Text
+     */
     protected  $Text;
-    public function  __construct($width = 215,$height = 100) {
+
+    /**
+     * Constructor
+     *
+     * @param Integer $width
+     * @param Integer $height
+     *
+     * @return void      
+     */
+    public function  __construct($width = 215, $height = 100) {
         $this->getFonts();                // get font address in fonts array
         $this->SetSize($width, $height);  // set size of the Image
         $this->SetDifficultly(5);         // set difficulty of Captcha/realy its angle
         $this->setHowManyFontCanBeUse(3); // by default,Captcha code can use 3 fonts
     }
 
-    public function SetSize($width,$height){
+    /**
+     * Set size of CAPTCHA image
+     *
+     * @param Integer $width
+     * @param Integer $height
+     *
+     * @return void
+     */
+    public function SetSize($width, $height){
         /*
-         * default size is 215 * 100,if you dont set it in constructor or by calling this method,it will be 215 * 100
-         * if width is smaller than 50,it will be 215
+         * default size is 215 * 100,
+         * if you don't set it in constructor or by calling this method,
+         * it will be 215 * 100
+         * if width is smaller than 50, it will be 215
          * if height is smaller than 25, it will be 100
          */
         $width = round($width);
         $height = round($height);
-        // check minimum of the size
-        if ($width >= 50)
-            $this->width = $width;
-        else
-            $this->width = 215;
 
-        if ($height >= 25)
-            $this->height = $height;
-        else
-            $this->height = 100;
+        // check width
+        if ($width >= 50) $this->width = $width;
+        else $this->width = 215;
+
+        // check height
+        if ($height >= 25) $this->height = $height;
+        else $this->height = 100;
     }
     
+    /**
+     * Set how many font can be used in CAPTCAH image
+     *
+     * @param Integer $font_can_be_use
+     *
+     * @return void
+     */
     public function setHowManyFontCanBeUse($font_can_be_use){
         /*
          * set how many random fonts can be use in Captcha Image
@@ -67,6 +146,13 @@ class CaptchaImage {
             $this->font_can_be_use_count = count($this->fonts);
     }
 
+    /**
+     * Set background image
+     *
+     * @param String $address of file
+     *
+     * @return void
+     */
     public function SetBackGroundImage($address){
         /*
          * by calling this method ,you can set Image address
@@ -81,7 +167,16 @@ class CaptchaImage {
             $this->BackgroundImage = null;
     }
     
-    public function SetBackGround($red = 255,$green = 255,$blue = 255){
+    /**
+     * Set background by RGB code
+     *
+     * @param Integer $red
+     * @param Integer $green
+     * @param Integer $blue
+     *
+     * @return void
+     */
+    public function SetBackGround($red = 255, $green = 255, $blue = 255){
         /*
          * set true background
          * if you don't do it,it will be white as default
@@ -93,6 +188,15 @@ class CaptchaImage {
         $this->Color_B = $blue;
     }
     
+    /**
+     * Set text color by RGB code
+     *
+     * @param Integer $red
+     * @param Integer $green
+     * @param Integer $blue
+     *
+     * @return void
+     */
     public function SetTextColor($red = 0,$green = 0,$blue = 0){
         /*
          * set true text color 
@@ -104,7 +208,14 @@ class CaptchaImage {
         $this->TC_G = $green;
         $this->TC_B = $blue;
     }
-
+    
+    /**
+     * Set difficulity of CAPTCHA
+     *
+     * @param Integer $Difficulty code (1-10)
+     *
+     * @return void
+     */
     public function SetDifficultly($Difficultly){
         /*
          * you can set difficulty from 1 to 10
@@ -148,13 +259,18 @@ class CaptchaImage {
                 break;
             default:
                 $this->angle = 16;
-        }
-        
+        }      
     }
 
+    /**
+     * Get fonts from fonts directory
+     *
+     * @return Boolean
+     */
     private function getFonts(){
-      // This is method to store fonts name from fonts_dir dircetory(default is Fonts) to fonts array
-      // Return True ,if can find font else return false
+      // This is method to store fonts name from fonts_dir dircetory 
+      // default directory is ./Fonts
+      // Return True, if can find font otherwise return false
         $count = 0;
         if ($handle = @opendir($this->fonts_dir)) {
             while (false !== ($file = readdir($handle))) {
@@ -168,13 +284,23 @@ class CaptchaImage {
             return FALSE;
         return TRUE;
     }
-    //+ ------------------------------------------I wanna to call it XPart
-    /*
+
+    //+ ---------------------- @Moein: I wanna call it XPart
+
+    /**
+     * XPart Description
+     *
      * You can call a color by RGB or HSL
      * this part is try to find Complementary Color
      * First,change Background Color to HSL ,then trun Hue value 180 degree
      * anfter thath,it will change new HSL to RGB for Text Color
      * you can read more about it in http://serennu.com/colour/rgbtohsl.php
+     */
+
+    /**
+     * RGB to HSL
+     *
+     * @return void
      */
     private function RGB2HSL(){
 
@@ -211,16 +337,26 @@ class CaptchaImage {
                     $this->HSL_H += 1;
             if ($this->HSL_H > 1)
                     $this->HSL_H -=1;
-
         }
         $this->HSL_Complement();
     }
+
+    /**
+     * HSL complement
+     *
+     * @return void
+     */
     private function HSL_Complement(){
         $this->HSL_H_complement = $this->HSL_H + 0.5;
         if ($this->HSL_H_complement > 1)
                 $this->HSL_H_complement--;
     }
 
+    /**
+     * HSL to RGB
+     *
+     * @return void
+     */
     private function HSL2RGB(){
         if ($this->HSL_S == 0){
             $this->TC_R = $this->HSL_L * 255;
@@ -239,6 +375,11 @@ class CaptchaImage {
         }
     }
     
+    /**
+     * HUE to RGB
+     *
+     * @return void
+     */
     private function HUE2RGB($var1,$var2,$varH){
         if ($varH < 0)
             $varH++;
@@ -252,14 +393,21 @@ class CaptchaImage {
             return ($var1 + ($var2 - $var1) * (2 / 3 - $varH) * 6);
         return ($var1);
     }
-    //+ --------------------------------------------------- End of the XPart
+
+    //+ ---------------------- End of the XPart
+
+    /**
+     * Get image main RGB
+     *
+     * If you set ImageBackground,and dont set background color
+     * it will be call,by these it can set background color
+     * after that find text color to print on this image
+     * these function check 64% of center of image,and get avrage of the RGB color
+     *
+     * @return void
+     */
     private function getImageMainRGB(){
-        /*
-         * If you set ImageBackground,and dont set background color
-         * it will be call,by these it can set background color
-         * after that find text color to print on this image
-         * these function check 64% of center of image,and get avrage of the RGB color
-         */
+
         switch ($this->ImageSuffix){
             case 'png':
                 $im = @imagecreatefrompng($this->BackgroundImage);
@@ -294,13 +442,27 @@ class CaptchaImage {
         $this->Color_B = (int)($sum['B'] / $count);
     }
 
-
+    /**
+     * Random RGB
+     *
+     * Make random RGB code
+     *
+     * @return Integer
+     */
     private function RandomRGB(){
-        // make random red,blue or green
         return (rand(0,255));
     }
 
-    private function RGBCheker(&$red,&$green,&$blue){
+    /**
+     * RGB checker
+     *
+     * @param Integer $red (by reference)
+     * @param Integer $green (by reference)
+     * @param Integer $blue (by reference)
+     *
+     * @return void
+     */
+    private function RGBCheker(&$red, &$green, &$blue){
         //checking RGB color,if it's not true
         //it will be set by rand
         if (!($red >= 0 && $red <= 255))
@@ -310,17 +472,31 @@ class CaptchaImage {
         if (!($blue >= 0 && $green <= 255))
             $green = $this->RandomRGB();
     }
+
+    /**
+     * Get font source by random
+     *
+     * Make random font for imageftbox and imagefttext
+     *
+     * @return String
+     */
     private function getFontSRC(){
-        //make random font fot imageftbox and imagefttext
+        //
         return $this->fonts_dir."/".$this->font_can_be_user_src[rand(0,$this->font_can_be_use_count - 1)];
     }
+
+    /**
+     * Set using font source
+     *
+     * @return void
+     */
     private function setFontCanBeUseSRC(){
         //making random fonts
         $count = count($this->fonts) - 1;
         for ($i = 0; $i < $this->font_can_be_use_count ; $i++){
             $rand = rand(0,$count);
             if (in_array($this->fonts[$rand], $this->font_can_be_user_src)){
-                //Checking to dont have one font twice or more
+                // Checking to dont have one font twice or more
                 $i--;
                 continue;;
             } else {
@@ -328,7 +504,18 @@ class CaptchaImage {
             }
         }
     }
-    private function getFontSize_Position($font,$char,$angle,$x){
+
+    /**
+     * Get font size and position
+     *
+     * @param String $font
+     * @param String $char
+     * @param Float $angle
+     * @param Float $x
+     *
+     * @return Array
+     */
+    private function getFontSize_Position($font, $char, $angle, $x){
         // to set char in correct position with correct font size
         for ($i = 0;$i < 201;$i++){
             $pos = imageftbbox($i, $angle, $font, $char);
@@ -349,18 +536,25 @@ class CaptchaImage {
             }
         }
     }
+
+    /**
+     * Get random angle
+     *
+     * @return Integer
+     */
     private function randangle(){
         //return random angle 
         return (rand(-1 * $this->angle,$this->angle));
     }
-    /*
-     * Main of the class
-     */
     
+    /**
+     * Draw CAPTCHA
+     *
+     * Draw Image of the captcha code
+     *
+     * @return void
+     */
     public function draw(){
-        /*
-         * to draw Image of the captcha code
-         */
         if ($this->BackgroundImage === null){
             if ($this->Color_B === null || $this->Color_B === null || $this->Color_B === null ){
                 if ($this->TC_B === null || $this->TC_B === null || $this->TC_B === null)
@@ -433,8 +627,7 @@ class CaptchaImage {
             $array = $this->getFontSize_Position($font, $char, $angle,  $XSize);
             imagefttext($im, $array['size'], $angle,  $i * ($XSize - 5) + 5, $array['YPos'], $color_Text,$font, $char);
             //draw a char into image
-        }
-        
+        }        
         switch ($this->ImageSuffix){
         //send header and draw image
             case 'jpg':
@@ -452,13 +645,12 @@ class CaptchaImage {
                default:
                 imagesavealpha($im,true);
                 imagepng($im,"MoeinCaptchaTranspartImage.png",1);
-                header("Content-Type: image/png");
+                header('Content-type: image/png');
                 readfile("MoeinCaptchaTranspartImage.png");
                 break;
         }
         //release a memory
         imagedestroy($im);
-  }
-    
+    }
 }
 ?>
