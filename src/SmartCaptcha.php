@@ -6,7 +6,7 @@
  * This class is designed to make random captcha code by your oponion
  * it extended from CaptchaImage class.
  *
- * @author Seyed Mohammad Moein Hoseini Manesh
+ * @author Seyed Mohammad Moein Hoseini Manesh < www.moeinhm.name >
  * @author mail moein7tl@gmail.com
  *
  *  With special thanks to Ali Akbari Boromand and Hossein Bokhamsein

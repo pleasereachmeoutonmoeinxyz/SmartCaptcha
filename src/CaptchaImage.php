@@ -7,7 +7,7 @@
  * This class is reading folder Fonts,you can add any font to this class easily
  * by copy / past your ttf files into Fonts directory
  *
- * @author Seyed Mohammad Moein Hoseini Manesh
+ * @author Seyed Mohammad Moein Hoseini Manesh < www.moeinhm.name >
  * @author mail moein7tl@gmail.com
  *
  */
